@@ -94,4 +94,28 @@ impl Adapter {
             .await?;
         Ok(())
     }
+
+    pub async fn get_name(self: &Self) -> Result<String, Error> {
+        let proxy = self.connection.get_bluez_proxy(&self.object_path);
+        let (name,): (Variant<String>,) = proxy
+            .method_call(DBUS_PROPERTIES_IFACE, "Get", (ADAPTER_IFACE, "Name"))
+            .await?;
+        Ok(name.0)
+    }
+
+    pub async fn set_name(self: &Self, name: &str) -> Result<(), Error> {
+        let proxy = self.connection.get_bluez_proxy(&self.object_path);
+        proxy
+            .method_call(
+                DBUS_PROPERTIES_IFACE,
+                "Set",
+                (
+                    ADAPTER_IFACE,
+                    "Name",
+                    MessageItem::Variant(Box::new(String::from(name).into())),
+                ),
+            )
+            .await?;
+        Ok(())
+    }
 }
