@@ -7,4 +7,6 @@ pub mod gatt;
 mod peripheral;
 mod uuid;
 
+pub mod bluez;
+
 pub use self::{error::*, peripheral::Peripheral, uuid::*};

@@ -2,7 +2,7 @@ use dbus::{
     arg::{RefArg, Variant},
     channel::Sender,
     nonblock::stdintf::org_freedesktop_dbus::PropertiesPropertiesChanged,
-    tree::MethodErr,
+    MethodErr,
     Message, Path,
 };
 use futures::{
