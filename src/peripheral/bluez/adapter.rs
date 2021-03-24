@@ -112,7 +112,7 @@ impl Adapter {
                 (
                     ADAPTER_IFACE,
                     "Discoverable",
-                    MessageItem::Variant(Box::new(String::from(state).into())),
+                    MessageItem::Variant(Box::new(state.into())),
                 ),
             )
             .await?;
