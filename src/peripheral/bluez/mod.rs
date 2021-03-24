@@ -43,12 +43,12 @@ impl Peripheral {
         self.adapter.set_alias(alias).await
     }
 
-    pub async fn get_name(&self) -> Result<String, Error> {
-        self.adapter.get_name().await
+    pub async fn get_discoverable(&self) -> Result<bool, Error> {
+        self.adapter.get_discoverable().await
     }
 
-    pub async fn set_name(&self, name: &str) -> Result<(), Error> {
-        self.adapter.set_name(name).await
+    pub async fn set_name(&self, state: bool) -> Result<(), Error> {
+        self.adapter.set_discoverable(state).await
     }
 
     pub async fn is_powered(self: &Self) -> Result<bool, Error> {

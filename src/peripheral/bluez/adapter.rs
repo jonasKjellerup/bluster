@@ -95,15 +95,15 @@ impl Adapter {
         Ok(())
     }
 
-    pub async fn get_name(self: &Self) -> Result<String, Error> {
+    pub async fn get_discoverable(self: &Self) -> Result<bool, Error> {
         let proxy = self.connection.get_bluez_proxy(&self.object_path);
-        let (name,): (Variant<String>,) = proxy
-            .method_call(DBUS_PROPERTIES_IFACE, "Get", (ADAPTER_IFACE, "Name"))
+        let (discoverable,): (Variant<bool>,) = proxy
+            .method_call(DBUS_PROPERTIES_IFACE, "Get", (ADAPTER_IFACE, "Discoverable"))
             .await?;
-        Ok(name.0)
+        Ok(discoverable.0)
     }
 
-    pub async fn set_name(self: &Self, name: &str) -> Result<(), Error> {
+    pub async fn set_discoverable(self: &Self, state: bool) -> Result<(), Error> {
         let proxy = self.connection.get_bluez_proxy(&self.object_path);
         proxy
             .method_call(
@@ -111,8 +111,8 @@ impl Adapter {
                 "Set",
                 (
                     ADAPTER_IFACE,
-                    "Name",
-                    MessageItem::Variant(Box::new(String::from(name).into())),
+                    "Discoverable",
+                    MessageItem::Variant(Box::new(String::from(state).into())),
                 ),
             )
             .await?;
