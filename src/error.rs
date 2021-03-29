@@ -60,11 +60,11 @@ impl fmt::Display for Error {
 }
 
 impl error::Error for Error {
-    fn description(self: &Self) -> &str {
-        &self.combined_description
-    }
-
     fn source(self: &Self) -> Option<&(dyn error::Error + 'static)> {
         Some(&self.error_type)
+    }
+
+    fn description(self: &Self) -> &str {
+        &self.combined_description
     }
 }

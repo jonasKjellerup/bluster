@@ -1,3 +1,20 @@
+bitflags! {
+    pub struct PropertyFlags: u8 {
+        const NONE = 0;
+        const READ_SECURE = 1;
+        const SEND_SECURE = 2;
+        const SEND_WITH_RESPONSE = 4;
+    }
+}
+
+// TODO figure out a strategy for extra events (notify and indicate on characteristics)
+#[derive(Default)]
+pub struct Properties<EventSender> {
+    pub(crate) read: Option<EventSender>,
+    pub(crate) write: Option<EventSender>,
+    pub(crate) flags: PropertyFlags,
+}
+
 macro_rules! _write_type {
     (WriteWithAndWithoutResponse, $event_sender:ident, $secure:ident) => {
         #[derive(Debug, Clone)]

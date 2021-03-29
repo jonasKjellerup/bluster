@@ -14,7 +14,7 @@ use bluster::{
         descriptor,
         descriptor::Descriptor,
         event::{Event, Response},
-        service::Service,
+        service::_Service,
     },
     Peripheral, SdpShortUuid,
 };
@@ -157,7 +157,7 @@ async fn it_advertises_gatt() {
 
     let peripheral = Peripheral::new().await.unwrap();
     peripheral
-        .add_service(&Service::new(
+        .add_service(&_Service::new(
             Uuid::from_sdp_short_uuid(0x1234 as u16),
             true,
             characteristics,
