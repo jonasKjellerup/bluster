@@ -1,4 +1,5 @@
 bitflags! {
+    #[derive(Default)]
     pub struct PropertyFlags: u8 {
         const NONE = 0;
         const READ_SECURE = 1;
@@ -8,11 +9,20 @@ bitflags! {
 }
 
 // TODO figure out a strategy for extra events (notify and indicate on characteristics)
-#[derive(Default)]
 pub struct Properties<EventSender> {
     pub(crate) read: Option<EventSender>,
     pub(crate) write: Option<EventSender>,
     pub(crate) flags: PropertyFlags,
+}
+
+impl<EventSender> Default for Properties<EventSender> {
+    fn default() -> Self {
+        Self {
+            read: None,
+            write: None,
+            flags: PropertyFlags::default(),
+        }
+    }
 }
 
 macro_rules! _write_type {

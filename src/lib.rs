@@ -6,6 +6,7 @@
 extern crate bitflags;
 
 mod error;
+mod common;
 pub mod peripheral;
 
 #[cfg(target_os = "linux")]

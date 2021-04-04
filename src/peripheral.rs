@@ -19,6 +19,7 @@
 //! ```
 
 use crate::Error;
+use async_trait::async_trait;
 
 /// A type alias for the corresponding `Peripheral` implementation
 /// for the used target os. For unsupported platforms this is set to
@@ -27,7 +28,7 @@ use crate::Error;
 pub type NativePeripheral = ();
 
 #[cfg(target_os = "linux")]
-pub type NativePeripheral = BluezPeripheral;
+pub type NativePeripheral = crate::bluez::BluezPeripheral;
 
 /// Definitions for managing the various properties
 /// of the bluetooth peripheral/interface.
@@ -40,12 +41,19 @@ pub mod properties {
         /// The name used by the Bluez D-Bus api to refer to a property.
         /// This is only relevant for when targeting linux.
         #[cfg(any(target_os = "linux", doc))]
-        const DBUS_KEY: &str;
+        const DBUS_KEY: &'static str;
 
         /// The type used when representing the value in rust code.
         /// E.g. for the `Powered` property the `bool` type is used
         /// to represent whether the peripheral is powered.
+        ///
+        /// The exact type bounds of this type varies depending
+        /// on the underlying implementations being used.
+        #[cfg(doc)]
         type Type;
+
+        #[cfg(target_os = "linux")]
+        type Type: Into<dbus::arg::messageitem::MessageItem> + crate::bluez::DBusGet + Send;
     }
 
     macro_rules! define_property_type {
@@ -88,7 +96,9 @@ pub mod properties {
     });
 }
 
-pub trait Peripheral {
+/// Describes an interface for a generic bluetooth peripheral.
+#[async_trait]
+pub trait Peripheral: Sized {
     /// Instantiates a new peripheral instance.
     ///
     /// To instantiate a new peripheral for a generic (supported)
